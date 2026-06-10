@@ -38,3 +38,12 @@ def add_meter_data(reading: MeterReading):
     conn.commit()
 
     return {"message": "Data inserted successfully"}
+@app.get("/meter-data")
+def get_meter_data():
+    cursor.execute("""
+        SELECT meter_id, grid_sector, city_zone,
+               voltage, current, reading_time, ingested_at
+        FROM meter_readings
+    """)
+    rows = cursor.fetchall()
+    return rows
