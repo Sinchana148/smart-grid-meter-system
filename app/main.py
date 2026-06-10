@@ -19,11 +19,13 @@ def home():
 @app.post("/meter-data")
 def add_meter_data(reading: MeterReading):
 
+    power = reading.voltage * reading.current
+
     cursor.execute(
         """
         INSERT INTO meter_readings
-        (meter_id, grid_sector, city_zone, voltage, current, reading_time)
-        VALUES (%s, %s, %s, %s, %s, %s)
+        (meter_id, grid_sector, city_zone, voltage, current, reading_time, power)
+        VALUES (%s, %s, %s, %s, %s, %s, %s)
         """,
         (
             reading.meter_id,
@@ -31,7 +33,8 @@ def add_meter_data(reading: MeterReading):
             reading.city_zone,
             reading.voltage,
             reading.current,
-            reading.reading_time
+            reading.reading_time,
+            power
         )
     )
 
