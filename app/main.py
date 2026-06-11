@@ -20,12 +20,16 @@ def home():
 def add_meter_data(reading: MeterReading):
 
     power = reading.voltage * reading.current
+    if power > 1300:
+       status = "OVERLOADED"
+    else:
+       status = "NORMAL"
 
     cursor.execute(
         """
-        INSERT INTO meter_readings
-        (meter_id, grid_sector, city_zone, voltage, current, reading_time, power)
-        VALUES (%s, %s, %s, %s, %s, %s, %s)
+       INSERT INTO meter_readings
+       (meter_id, grid_sector, city_zone, voltage, current, reading_time, power, status)
+       VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
         """,
         (
             reading.meter_id,
@@ -34,7 +38,9 @@ def add_meter_data(reading: MeterReading):
             reading.voltage,
             reading.current,
             reading.reading_time,
-            power
+            power,
+            status
+
         )
     )
 
@@ -45,7 +51,7 @@ def add_meter_data(reading: MeterReading):
 def get_meter_data():
     cursor.execute("""
         SELECT meter_id, grid_sector, city_zone,
-               voltage, current, power, reading_time, ingested_at
+               voltage, current, power,status, reading_time, ingested_at
         FROM meter_readings
     """)
     rows = cursor.fetchall()
