@@ -45,7 +45,7 @@ def add_meter_data(reading: MeterReading):
 def get_meter_data():
     cursor.execute("""
         SELECT meter_id, grid_sector, city_zone,
-               voltage, current, reading_time, ingested_at
+               voltage, current, power, reading_time, ingested_at
         FROM meter_readings
     """)
     rows = cursor.fetchall()
